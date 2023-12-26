@@ -1,0 +1,22 @@
+{
+  "name": "seo-auto-index",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "db:generate": "bunx drizzle-kit generate:sqlite --schema ./src/db/schema.ts",
+    "db:migrate": "bun run src/db/migrate.ts",
+    "db": "bun run db:generate && bun run db:migrate",
+    "start": "bun run index.ts"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.20",
+    "drizzle-kit": "^0.20.8"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.29.2",
+    "googleapis": "^129.0.0"
+  }
+}
