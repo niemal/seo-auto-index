@@ -10,7 +10,7 @@ export default async function pushToBing(urls: Array<string>) {
   urls = urls.slice(0, 10000);
 
   const options = {
-    url: `https://bing.com/webmaster/api.svc/json/SubmitUrlbatch?​apikey=${apiKey}`,
+    url: `https://bing.com/webmaster/api.svc/json/SubmitUrlbatch?​apikey=${apiKey.toUpperCase()}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

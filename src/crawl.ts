@@ -23,9 +23,6 @@ export default async function core() {
     hasher.update(body);
     const hash = hasher.digest("hex");
 
-    const what = await db.select().from(pages);
-    console.log({ what });
-
     const exists = await db.select().from(pages).where(eq(pages.url, url));
 
     if (exists.length === 0) {
@@ -33,7 +30,7 @@ export default async function core() {
       urlsToPush.push(url);
     } else if (exists[0].content !== hash) {
       // New hash found, updating with it.
-      db.update(pages).set({ content: hash }).where(eq(pages.url, url));
+      await db.update(pages).set({ content: hash }).where(eq(pages.url, url));
       urlsToPush.push(url);
     }
   }
