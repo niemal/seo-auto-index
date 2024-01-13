@@ -65,25 +65,27 @@ async function crawlSitemaps() {
     const body = await resp.text();
 
     // Parse for urls.
-    const urls = body
-      .split("\n")
-      .map((line) => {
-        const sitemapMatches = line.match(
-          /<sitemap><loc>(https?:\/\/[^\s]+)<\/loc><\/sitemap>/
+    const urls = body.split("\n").map((line) => {
+      const sitemapMatches = line.match(
+        /<sitemap><loc>(https?:\/\/[^\s]+)<\/loc><\/sitemap>/
+      );
+
+      if (sitemapMatches && !sitemaps.includes(sitemapMatches[1])) {
+        sitemaps.push(sitemapMatches[1]);
+      }
+
+      const matches = line.match(/\<loc\>\s*(https?:\/\/[^\s]+?)\s*\<\/loc\>/g);
+
+      if (matches && matches.length > 0) {
+        matches.map((match) =>
+          match !== null && !sitemaps.includes(match)
+            ? allUrls.push(match.replace(/(\<loc\>)|(\<\/loc\>)/g, ""))
+            : ""
         );
+      }
+    });
 
-        if (sitemapMatches && !sitemaps.includes(sitemapMatches[1])) {
-          sitemaps.push(sitemapMatches[1]);
-        }
-
-        const matches = line.match(/<loc>(https?:\/\/[^\s]+)<\/loc>/);
-        return matches ? matches[1] : null;
-      })
-      .filter(
-        (url) => url !== null && !sitemaps.includes(url)
-      ) as Array<string>;
-
-    allUrls = [...new Set([...allUrls, ...urls])];
+    allUrls = [...new Set([...allUrls])];
   }
 
   return allUrls;
